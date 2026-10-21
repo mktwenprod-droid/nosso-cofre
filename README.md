@@ -1,6 +1,8 @@
-# Nosso Cofre
+# DuoVita
 
 Cofre de poupança para casais: cada um entra com seu próprio login, registra os aportes, acompanha o saldo com rendimento estimado (estilo Nubank, ligado ao CDI) e simula quanto vão ter guardado até o casamento ou a entrada da casa.
+
+> O repositório e a URL do GitHub Pages continuam se chamando `nosso-cofre` (mudar isso trocaria o link do site); o nome da marca dentro do site é **DuoVita**.
 
 É um site estático (HTML/CSS/JS puro, sem build), sincronizado em tempo real entre dispositivos via **Firebase Firestore**, publicado no **GitHub Pages**.
 
