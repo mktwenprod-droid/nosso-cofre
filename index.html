@@ -3,55 +3,56 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#2a78d6">
+<meta name="theme-color" content="#16261c">
 <script>(function(){try{var t=localStorage.getItem('nossoCofre-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
-<title>Nosso Cofre</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%92%8D%3C/text%3E%3C/svg%3E">
+<title>DuoVita</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%2316261c'/%3E%3Ctext x='50' y='64' font-size='48' text-anchor='middle' fill='%23f1ede1' font-family='Georgia,serif'%3E%E2%88%9E%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Caveat:wght@500;600&display=swap" rel="stylesheet">
 <style>
 /* layout: sticky header with identity + tabs; single centered column (max 720px) of cards; stacked area chart in Simulação */
 :root{
   color-scheme: light;
-  --bg:#f9f9f7;
-  --surface:#fcfcfb;
-  --surface-2:#f2f1ec;
-  --fg:#0b0b0b;
-  --fg-muted:#52514e;
-  --fg-faint:#898781;
-  --border:#e1e0d9;
-  --border-strong:#c3c2b7;
-  --accent:#2a78d6;
-  --accent-ink:#ffffff;
-  --accent-2:#eb6834;
-  --good:#0ca30c;
-  --bad:#c0392b;
-  --warn:#9a6b00;
-  --warn-bg:#fdf1d8;
-  --shadow: 0 1px 2px rgba(11,11,11,0.04), 0 8px 24px -12px rgba(11,11,11,0.10);
+  --bg:#efece0;
+  --surface:#faf9f3;
+  --surface-2:#e7e2d1;
+  --fg:#182a1e;
+  --fg-muted:#51594f;
+  --fg-faint:#83897c;
+  --border:#ddd7c2;
+  --border-strong:#b9b29a;
+  --accent:#1f3b2a;
+  --accent-ink:#f1ede1;
+  --accent-2:#a8842f;
+  --good:#2f6b3f;
+  --bad:#9c3b31;
+  --warn:#8a6d1f;
+  --warn-bg:#f1e6c6;
+  --shadow: 0 1px 2px rgba(22,38,28,0.06), 0 8px 24px -12px rgba(22,38,28,0.16);
   --font-display:'Fraunces', ui-serif, Georgia, serif;
+  --font-script:'Caveat', cursive;
   --font-body: system-ui, -apple-system, "Segoe UI", sans-serif;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
     color-scheme: dark;
-    --bg:#0d0d0d; --surface:#1a1a19; --surface-2:#232321;
-    --fg:#ffffff; --fg-muted:#c3c2b7; --fg-faint:#8f8d87;
-    --border:#2c2c2a; --border-strong:#383835;
-    --accent:#3987e5; --accent-ink:#ffffff; --accent-2:#d95926;
-    --good:#0ca30c; --bad:#e66767; --warn:#e3b64a; --warn-bg:#2a2210;
-    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+    --bg:#13211a; --surface:#1b2c22; --surface-2:#223726;
+    --fg:#f1ede1; --fg-muted:#c6c2b0; --fg-faint:#8d9388;
+    --border:#2c4232; --border-strong:#3c5a44;
+    --accent:#8fc49c; --accent-ink:#13211a; --accent-2:#d8b568;
+    --good:#6fbf7d; --bad:#e2766b; --warn:#d8b568; --warn-bg:#2a2410;
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.55);
   }
 }
 :root[data-theme="dark"]{
   color-scheme: dark;
-  --bg:#0d0d0d; --surface:#1a1a19; --surface-2:#232321;
-  --fg:#ffffff; --fg-muted:#c3c2b7; --fg-faint:#8f8d87;
-  --border:#2c2c2a; --border-strong:#383835;
-  --accent:#3987e5; --accent-ink:#ffffff; --accent-2:#d95926;
-  --good:#0ca30c; --bad:#e66767; --warn:#e3b64a; --warn-bg:#2a2210;
-  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+  --bg:#13211a; --surface:#1b2c22; --surface-2:#223726;
+  --fg:#f1ede1; --fg-muted:#c6c2b0; --fg-faint:#8d9388;
+  --border:#2c4232; --border-strong:#3c5a44;
+  --accent:#8fc49c; --accent-ink:#13211a; --accent-2:#d8b568;
+  --good:#6fbf7d; --bad:#e2766b; --warn:#d8b568; --warn-bg:#2a2410;
+  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.55);
 }
 
 *{box-sizing:border-box;}
@@ -68,9 +69,8 @@ p{margin:0;}
 /* header */
 .topbar{ position:sticky; top:0; background:var(--bg); z-index:10; padding-block:16px 10px; border-bottom:1px solid var(--border); margin-bottom:18px; }
 .topbar-row{display:flex; align-items:baseline; justify-content:space-between; gap:12px; flex-wrap:wrap;}
-.brand{display:flex; align-items:center; gap:8px;}
+.brand{display:flex; align-items:center; gap:10px;}
 .brand h1{font-size:22px; letter-spacing:-0.01em;}
-.brand .ring{font-size:16px;}
 .who{display:flex; align-items:center; gap:10px; font-size:13px; color:var(--fg-muted);}
 .who b{color:var(--fg); font-weight:600;}
 .linklike{background:none;border:none;color:var(--accent);font:inherit;font-size:13px;cursor:pointer;padding:0;text-decoration:underline;text-underline-offset:2px;}
@@ -112,9 +112,17 @@ input:focus, select:focus, button:focus-visible{outline:2px solid var(--accent);
 .pill[aria-pressed="true"]{background:var(--accent); border-color:var(--accent); color:var(--accent-ink);}
 
 /* badges */
-.badge{display:inline-flex; align-items:center; gap:5px; font-size:12px; font-weight:700; border-radius:999px; padding:3px 9px;}
-.badge.p1{background:rgba(42,120,214,0.16); color:var(--accent);}
-.badge.p2{background:rgba(235,104,52,0.18); color:var(--accent-2);}
+.badge{display:inline-flex; align-items:center; gap:5px; font-size:11.5px; font-weight:700; letter-spacing:.02em; border-radius:999px; padding:3px 10px; border:1px solid currentColor; background:transparent;}
+.badge.p1{color:var(--accent);}
+.badge.p2{color:var(--accent-2);}
+
+/* brand */
+.logomark{
+  width:34px; height:34px; border-radius:50%; background:var(--accent); color:var(--accent-ink);
+  display:inline-flex; align-items:center; justify-content:center; font-family:var(--font-display); font-size:19px; flex-shrink:0;
+}
+.tagline{font-family:var(--font-body); font-size:10.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--fg-faint);}
+.flourish{font-family:var(--font-script); font-size:20px; color:var(--fg-muted); line-height:1;}
 
 /* progress */
 .progress-track{height:10px; border-radius:999px; background:var(--surface-2); overflow:hidden; border:1px solid var(--border);}
@@ -393,8 +401,9 @@ function renderSetupNotice(){
 /* ---- login (Firebase email/senha) ---- */
 function renderLogin(){
   return '<div class="center-screen"><div class="auth-card card">'+
-    '<div style="text-align:center;margin-bottom:14px;"><span style="font-size:32px;">💍</span></div>'+
-    '<h1 style="margin-bottom:6px;text-align:center;">Nosso Cofre</h1>'+
+    '<div style="text-align:center;margin-bottom:10px;"><span class="logomark" style="width:48px;height:48px;font-size:26px;">∞</span></div>'+
+    '<h1 style="margin-bottom:4px;text-align:center;">DuoVita</h1>'+
+    '<p class="tagline" style="text-align:center;margin-bottom:14px;">Nosso dinheiro. Nossa vida. Nosso futuro.</p>'+
     '<p class="sub" style="text-align:center;">Entre com a conta que foi criada pra você.</p>'+
     '<form id="loginForm" class="stack">'+
       '<div class="field"><label for="lg_email">E-mail</label><input id="lg_email" type="email" required autocomplete="username"></div>'+
@@ -431,8 +440,9 @@ function wireLogin(){
 /* ---- wizard (first run, no config doc yet) ---- */
 function renderWizard(){
   return '<div class="center-screen"><div class="auth-card card">'+
-    '<h1 style="margin-bottom:6px;">Vamos criar o cofre</h1>'+
-    '<p class="sub" style="margin-bottom:16px;">Você está entrando com <b>'+escapeHtml(currentUser.email)+'</b> — esse e-mail fica vinculado ao primeiro nome abaixo. Dá pra editar tudo depois.</p>'+
+    '<div style="text-align:center;margin-bottom:10px;"><span class="logomark">∞</span></div>'+
+    '<h1 style="margin-bottom:6px;text-align:center;">Vamos criar o cofre de vocês</h1>'+
+    '<p class="sub" style="margin-bottom:16px;text-align:center;">Você está entrando com <b>'+escapeHtml(currentUser.email)+'</b> — esse e-mail fica vinculado ao primeiro nome abaixo. Dá pra editar tudo depois.</p>'+
     '<form id="setupForm" class="stack">'+
       '<div class="row">'+
         '<div class="field"><label for="su_nome1">Seu nome</label><input id="su_nome1" required placeholder="Ex: Ana"></div>'+
@@ -466,8 +476,9 @@ function renderLinkAccount(){
   var taken1 = config.email1 ? ' <span class="taken">('+escapeHtml(config.email1)+')</span>' : '';
   var taken2 = config.email2 ? ' <span class="taken">('+escapeHtml(config.email2)+')</span>' : '';
   return '<div class="center-screen"><div class="auth-card card">'+
-    '<h1 style="margin-bottom:6px;">Quem é você?</h1>'+
-    '<p class="sub">Conectado como <b>'+escapeHtml(currentUser.email)+'</b>. Escolha a qual dos dois esse e-mail pertence.</p>'+
+    '<div style="text-align:center;margin-bottom:10px;"><span class="logomark">∞</span></div>'+
+    '<h1 style="margin-bottom:6px;text-align:center;">Quem é você?</h1>'+
+    '<p class="sub" style="text-align:center;">Conectado como <b>'+escapeHtml(currentUser.email)+'</b>. Escolha a qual dos dois esse e-mail pertence.</p>'+
     '<div class="profile-pick">'+
       '<button type="button" class="profile-card" data-link="1"><span class="initial">'+escapeHtml(initial("1"))+'</span><b>'+escapeHtml(nome("1"))+'</b>'+taken1+'</button>'+
       '<button type="button" class="profile-card p2" data-link="2"><span class="initial">'+escapeHtml(initial("2"))+'</span><b>'+escapeHtml(nome("2"))+'</b>'+taken2+'</button>'+
@@ -507,7 +518,7 @@ function renderApp(prof){
 
   return '<div class="topbar">'+
     '<div class="topbar-row">'+
-      '<div class="brand"><h1>Nosso Cofre</h1><span class="ring">💍</span></div>'+
+      '<div class="brand"><span class="logomark">∞</span><h1>DuoVita</h1></div>'+
       '<div class="who">'+
         'Olá, <b>'+escapeHtml(nome(prof))+'</b> · <button class="linklike" id="trocarVinculo">não é você?</button> · <button class="linklike" id="sairBtn">sair</button>'+
         '<button class="iconbtn" id="themeBtn" title="Alternar tema" aria-label="Alternar tema">'+(curTheme==='dark'?'☀':'☾')+'</button>'+
@@ -516,7 +527,7 @@ function renderApp(prof){
     '<div class="tabs" role="tablist">'+tabsHtml+'</div>'+
   '</div>'+
   body+
-  '<footer class="credit">Dados sincronizados em tempo real entre os dois logins.</footer>';
+  '<footer class="credit"><span class="flourish">Juntos, sempre.</span><br>Dados sincronizados em tempo real entre os dois logins.</footer>';
 }
 
 function wireApp(prof){
