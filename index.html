@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#2a78d6">
+<script>(function(){try{var t=localStorage.getItem('nossoCofre-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+<title>Nosso Cofre</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%92%8D%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&display=swap" rel="stylesheet">
+<style>
+/* layout: sticky header with identity + tabs; single centered column (max 720px) of cards; stacked area chart in Simulação */
+:root{
+  color-scheme: light;
+  --bg:#f9f9f7;
+  --surface:#fcfcfb;
+  --surface-2:#f2f1ec;
+  --fg:#0b0b0b;
+  --fg-muted:#52514e;
+  --fg-faint:#898781;
+  --border:#e1e0d9;
+  --border-strong:#c3c2b7;
+  --accent:#2a78d6;
+  --accent-ink:#ffffff;
+  --accent-2:#eb6834;
+  --good:#0ca30c;
+  --bad:#c0392b;
+  --warn:#9a6b00;
+  --warn-bg:#fdf1d8;
+  --shadow: 0 1px 2px rgba(11,11,11,0.04), 0 8px 24px -12px rgba(11,11,11,0.10);
+  --font-display:'Fraunces', ui-serif, Georgia, serif;
+  --font-body: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+    --bg:#0d0d0d; --surface:#1a1a19; --surface-2:#232321;
+    --fg:#ffffff; --fg-muted:#c3c2b7; --fg-faint:#8f8d87;
+    --border:#2c2c2a; --border-strong:#383835;
+    --accent:#3987e5; --accent-ink:#ffffff; --accent-2:#d95926;
+    --good:#0ca30c; --bad:#e66767; --warn:#e3b64a; --warn-bg:#2a2210;
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --bg:#0d0d0d; --surface:#1a1a19; --surface-2:#232321;
+  --fg:#ffffff; --fg-muted:#c3c2b7; --fg-faint:#8f8d87;
+  --border:#2c2c2a; --border-strong:#383835;
+  --accent:#3987e5; --accent-ink:#ffffff; --accent-2:#d95926;
+  --good:#0ca30c; --bad:#e66767; --warn:#e3b64a; --warn-bg:#2a2210;
+  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+}
+
+*{box-sizing:border-box;}
+html,body{height:100%;}
+body{
+  background:var(--bg); color:var(--fg); font-family:var(--font-body);
+  margin:0; padding-inline:16px; padding-block:0 32px; min-height:100%;
+}
+h1,h2,h3{font-family:var(--font-display); font-weight:600; margin:0; text-wrap:balance;}
+p{margin:0;}
+.app{max-width:720px; margin:0 auto;}
+.hidden{display:none !important;}
+
+/* header */
+.topbar{ position:sticky; top:0; background:var(--bg); z-index:10; padding-block:16px 10px; border-bottom:1px solid var(--border); margin-bottom:18px; }
+.topbar-row{display:flex; align-items:baseline; justify-content:space-between; gap:12px; flex-wrap:wrap;}
+.brand{display:flex; align-items:center; gap:8px;}
+.brand h1{font-size:22px; letter-spacing:-0.01em;}
+.brand .ring{font-size:16px;}
+.who{display:flex; align-items:center; gap:10px; font-size:13px; color:var(--fg-muted);}
+.who b{color:var(--fg); font-weight:600;}
+.linklike{background:none;border:none;color:var(--accent);font:inherit;font-size:13px;cursor:pointer;padding:0;text-decoration:underline;text-underline-offset:2px;}
+.iconbtn{background:transparent;border:1px solid var(--border-strong);border-radius:8px;width:30px;height:30px;cursor:pointer;color:var(--fg-muted);font-size:14px;display:inline-flex;align-items:center;justify-content:center;}
+.tabs{display:flex; gap:4px; margin-top:12px; overflow-x:auto; padding-bottom:2px;}
+.tab{ font-family:var(--font-body); font-size:13.5px; font-weight:600; color:var(--fg-muted); background:transparent; border:none; border-radius:8px 8px 0 0; padding:8px 12px; cursor:pointer; white-space:nowrap; }
+.tab[aria-selected="true"]{color:var(--accent); background:var(--surface-2); border-bottom:2px solid var(--accent);}
+
+/* cards */
+.card{ background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:18px; margin-bottom:14px; box-shadow:var(--shadow); }
+.card h2{font-size:17px; margin-bottom:4px;}
+.card .sub{font-size:13px; color:var(--fg-muted); margin-bottom:14px;}
+.stack{display:flex; flex-direction:column; gap:14px;}
+.row{display:flex; gap:14px; flex-wrap:wrap;}
+.row > *{flex:1; min-width:0;}
+
+/* stat tiles */
+.hero-num{font-family:var(--font-body); font-size:38px; font-weight:700; letter-spacing:-0.01em; font-variant-numeric:tabular-nums; line-height:1.1;}
+.stat-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); gap:10px; margin-top:12px;}
+.stat-tile{background:var(--surface-2); border-radius:10px; padding:10px 12px;}
+.stat-tile .label{font-size:11.5px; color:var(--fg-faint); text-transform:uppercase; letter-spacing:.04em;}
+.stat-tile .value{font-size:17px; font-weight:700; font-variant-numeric:tabular-nums; margin-top:2px;}
+.swatch{display:inline-block; width:9px; height:9px; border-radius:2px; margin-right:6px;}
+
+/* forms */
+label{display:block; font-size:12.5px; color:var(--fg-muted); margin-bottom:5px; font-weight:600;}
+.field{margin-bottom:12px;}
+input, select{ width:100%; font:inherit; font-size:14.5px; color:var(--fg); background:var(--surface); border:1px solid var(--border-strong); border-radius:9px; padding:9px 11px; font-variant-numeric:tabular-nums; }
+input:focus, select:focus, button:focus-visible{outline:2px solid var(--accent); outline-offset:1px;}
+.btn{ font:inherit; font-size:14px; font-weight:600; border-radius:9px; padding:10px 16px; cursor:pointer; border:1px solid var(--accent); background:var(--accent); color:var(--accent-ink); }
+.btn:disabled{opacity:.5; cursor:not-allowed;}
+.btn.secondary{background:transparent; color:var(--accent);}
+.btn.ghost{background:transparent; color:var(--fg-muted); border-color:var(--border-strong);}
+.btn.danger{background:transparent; color:var(--bad); border-color:var(--bad); padding:6px 10px; font-size:12.5px;}
+.btn.wide{width:100%;}
+.btn-row{display:flex; gap:10px; flex-wrap:wrap;}
+.pillgroup{display:flex; gap:6px; flex-wrap:wrap;}
+.pill{border:1px solid var(--border-strong); border-radius:999px; padding:6px 12px; font-size:13px; font-weight:600; background:transparent; color:var(--fg-muted); cursor:pointer;}
+.pill[aria-pressed="true"]{background:var(--accent); border-color:var(--accent); color:var(--accent-ink);}
+
+/* badges */
+.badge{display:inline-flex; align-items:center; gap:5px; font-size:12px; font-weight:700; border-radius:999px; padding:3px 9px;}
+.badge.p1{background:rgba(42,120,214,0.16); color:var(--accent);}
+.badge.p2{background:rgba(235,104,52,0.18); color:var(--accent-2);}
+
+/* progress */
+.progress-track{height:10px; border-radius:999px; background:var(--surface-2); overflow:hidden; border:1px solid var(--border);}
+.progress-fill{height:100%; background:var(--accent); border-radius:999px;}
+
+/* table */
+table{width:100%; border-collapse:collapse; font-size:13.5px;}
+th{text-align:left; font-size:11.5px; color:var(--fg-faint); text-transform:uppercase; letter-spacing:.03em; padding:6px 8px; border-bottom:1px solid var(--border-strong);}
+td{padding:9px 8px; border-bottom:1px solid var(--border); vertical-align:middle;}
+td.num{font-variant-numeric:tabular-nums; text-align:right; white-space:nowrap;}
+.table-wrap{overflow-x:auto;}
+tr:last-child td{border-bottom:none;}
+
+/* login/setup */
+.center-screen{min-height:70vh; display:flex; align-items:center; justify-content:center; padding-block:40px;}
+.auth-card{max-width:420px; width:100%;}
+.profile-pick{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:6px;}
+.profile-card{border:1px solid var(--border-strong); border-radius:12px; padding:16px 10px; text-align:center; background:var(--surface-2); cursor:pointer; font:inherit; color:var(--fg);}
+.profile-card:hover{border-color:var(--accent);}
+.profile-card .initial{width:44px; height:44px; border-radius:50%; background:var(--accent); color:var(--accent-ink); font-family:var(--font-display); font-size:19px; display:flex; align-items:center; justify-content:center; margin:0 auto 8px;}
+.profile-card.p2 .initial{background:var(--accent-2);}
+.profile-card b{display:block; font-size:14.5px;}
+.profile-card .taken{display:block; font-size:11px; color:var(--fg-faint); margin-top:2px;}
+
+.notice{font-size:12.5px; border-radius:10px; padding:10px 12px; background:var(--warn-bg); color:var(--warn); margin-bottom:14px;}
+.err{font-size:12.5px; color:var(--bad); margin-top:6px;}
+.ok-msg{font-size:12.5px; color:var(--good); margin-top:6px;}
+.helptext{font-size:12px; color:var(--fg-faint); margin-top:4px;}
+
+/* chart */
+.chart-wrap{position:relative;}
+.legend{display:flex; gap:16px; margin-bottom:8px; font-size:12.5px; color:var(--fg-muted);}
+.legend span{display:inline-flex; align-items:center; gap:6px;}
+svg.chart{width:100%; height:auto; display:block; overflow:visible;}
+.tooltip{ position:absolute; pointer-events:none; background:var(--surface); border:1px solid var(--border-strong); border-radius:8px; padding:8px 10px; font-size:12.5px; box-shadow:var(--shadow); white-space:nowrap; transform:translate(-50%,-110%); }
+.tooltip .trow{display:flex; justify-content:space-between; gap:10px; font-variant-numeric:tabular-nums;}
+
+footer.credit{text-align:center; font-size:11.5px; color:var(--fg-faint); margin-top:24px;}
+</style>
+</head>
+<body>
+
+<div class="app" id="app">
+  <div class="center-screen"><p style="color:var(--fg-muted)">Carregando o cofre…</p></div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script>
+(function(){
+"use strict";
+
+/* =========================================================
+   CONFIGURAÇÃO DO FIREBASE — troque pelos valores do SEU projeto
+   (Console do Firebase > Configurações do projeto > Seus apps > Config)
+   Veja o passo a passo no README.md deste repositório.
+   ========================================================= */
+var firebaseConfig = {
+  apiKey: "SUA_API_KEY_AQUI",
+  authDomain: "SEU_PROJETO.firebaseapp.com",
+  projectId: "SEU_PROJETO",
+  storageBucket: "SEU_PROJETO.firebasestorage.app",
+  messagingSenderId: "SEU_SENDER_ID",
+  appId: "SEU_APP_ID"
+};
+/* ========================================================= */
+
+var COLLECTION = "nosso-cofre";
+
+/* ---------- state ---------- */
+var fsdb=null, configDocRef=null, aportesDocRef=null;
+var configLoaded=false, config=null;
+var aportes=[];
+var currentUser=null, authReady=false;
+var forceLinkScreen=false;
+var activeTab="visao";
+var simMode="forward"; // forward | reverse
+var showSimTable=false;
+var pendingHoverCleanup=null;
+var suppressNextAportesWrite=false;
+var configListenerAttached=false, aportesListenerAttached=false;
+
+/* ---------- utils ---------- */
+function fmtBRL(n){
+  if(n===null||n===undefined||isNaN(n)) n=0;
+  return new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(n);
+}
+function fmtNum(n,d){ return new Intl.NumberFormat('pt-BR',{maximumFractionDigits:d==null?1:d}).format(n); }
+function fmtDate(iso){
+  if(!iso) return "—";
+  var p=iso.split("-"); if(p.length!==3) return iso;
+  return p[2]+"/"+p[1]+"/"+p[0];
+}
+function todayISO(){
+  var d=new Date(); var m=String(d.getMonth()+1).padStart(2,'0'); var day=String(d.getDate()).padStart(2,'0');
+  return d.getFullYear()+"-"+m+"-"+day;
+}
+function daysBetween(iso){
+  var a=new Date(iso+"T00:00:00"); var b=new Date(todayISO()+"T00:00:00");
+  return Math.round((b-a)/86400000);
+}
+function escapeHtml(s){ return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];}); }
+function uid(){ return 'a'+Date.now().toString(36)+Math.random().toString(36).slice(2,8); }
+function clamp(n,lo,hi){ return Math.max(lo,Math.min(hi,n)); }
+function applyTheme(t){ document.documentElement.setAttribute('data-theme',t); try{ localStorage.setItem('nossoCofre-theme',t); }catch(e){} }
+function toggleTheme(){
+  var cur=document.documentElement.getAttribute('data-theme');
+  if(!cur){ cur = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark':'light'; }
+  applyTheme(cur==='dark'?'light':'dark');
+}
+
+function nome(p){
+  if(!config) return p==="1"?"Parceiro 1":"Parceiro 2";
+  return (p==="1"? config.nome1: config.nome2) || (p==="1"?"Parceiro 1":"Parceiro 2");
+}
+function initial(p){ var n=nome(p); return (n||"?").trim().charAt(0).toUpperCase(); }
+function currentProfile(){
+  if(!config || !currentUser || forceLinkScreen) return null;
+  var email=(currentUser.email||"").toLowerCase();
+  if(config.email1 && config.email1.toLowerCase()===email) return "1";
+  if(config.email2 && config.email2.toLowerCase()===email) return "2";
+  return null;
+}
+
+/* financial math */
+function dailyRate(annualPct){ return Math.pow(1+annualPct/100,1/365)-1; }
+function monthlyRate(annualPct){ return Math.pow(1+annualPct/100,1/12)-1; }
+function effectiveAnnualPct(){
+  if(!config) return 0;
+  return (config.cdiAnual||0) * (config.percentCdi||0) / 100;
+}
+function growthFactorSince(iso, annualPct){
+  var days=daysBetween(iso); if(days<0) days=0;
+  return Math.pow(1+dailyRate(annualPct), days);
+}
+function saldoEstimado(filterPessoa){
+  var ann=effectiveAnnualPct();
+  var total=0;
+  aportes.forEach(function(a){
+    if(filterPessoa && a.pessoa!==filterPessoa) return;
+    total += (a.valor||0) * growthFactorSince(a.data, ann);
+  });
+  return total;
+}
+function totalAportado(filterPessoa){
+  var total=0;
+  aportes.forEach(function(a){ if(filterPessoa && a.pessoa!==filterPessoa) return; total+=(a.valor||0); });
+  return total;
+}
+
+/* ---------- Firebase / storage layer ---------- */
+function isConfigured(){
+  return firebaseConfig.apiKey && firebaseConfig.apiKey !== 'SUA_API_KEY_AQUI';
+}
+function defaultConfig(){
+  return {nome1:"",nome2:"",email1:"",email2:"",salario1:0,salario2:0,metaNome:"",metaValor:0,metaData:"",cdiAnual:13.9,percentCdi:100};
+}
+
+function initFirebase(){
+  if(!isConfigured()){
+    render();
+    return;
+  }
+  firebase.initializeApp(firebaseConfig);
+  fsdb = firebase.firestore();
+  configDocRef = fsdb.collection(COLLECTION).doc("config");
+  aportesDocRef = fsdb.collection(COLLECTION).doc("aportes");
+
+  firebase.auth().onAuthStateChanged(function(u){
+    currentUser = u; authReady = true;
+    if(u){
+      forceLinkScreen=false;
+      if(!configListenerAttached){ configListenerAttached=true; listenConfig(); }
+      if(!aportesListenerAttached){ aportesListenerAttached=true; listenAportes(); }
+    } else {
+      configLoaded=false; config=null; aportes=[];
+    }
+    render();
+  });
+}
+
+function listenConfig(){
+  configDocRef.onSnapshot(function(snap){
+    config = snap.exists ? snap.data() : null;
+    configLoaded = true;
+    render();
+  }, function(err){ console.warn("config snapshot error", err); });
+}
+function listenAportes(){
+  aportesDocRef.onSnapshot(function(snap){
+    if(suppressNextAportesWrite){ suppressNextAportesWrite=false; return; }
+    var data = snap.data();
+    aportes = (data && data.list) ? data.list : [];
+    render();
+  }, function(err){ console.warn("aportes snapshot error", err); });
+}
+
+function saveConfig(partial){
+  var next = Object.assign({}, config||defaultConfig(), partial);
+  configDocRef.set(next).catch(function(e){ console.warn("save config failed", e); alert("Não deu pra salvar: "+e.message); });
+}
+function createConfig(cfg){
+  configDocRef.set(cfg).catch(function(e){ console.warn("create config failed", e); alert("Não deu pra criar o cofre: "+e.message); });
+}
+
+function persistAportes(){
+  suppressNextAportesWrite = true;
+  aportesDocRef.set({ list: aportes, updatedAt: firebase.firestore.FieldValue.serverTimestamp() })
+    .catch(function(e){ console.warn("persist aportes failed", e); alert("Não deu pra salvar o aporte: "+e.message); });
+}
+function addAporte(data){
+  data.id=uid(); data.criadoEm=Date.now();
+  aportes = aportes.concat([data]);
+  persistAportes();
+}
+function deleteAporte(id){
+  aportes = aportes.filter(function(a){ return a.id!==id; });
+  persistAportes();
+}
+
+/* ---------- simulation ---------- */
+function simulateForward(saldoInicial, aporteMensal, annualPct, nMeses){
+  var i = monthlyRate(annualPct);
+  var saldo = saldoInicial, aportadoAcc = saldoInicial;
+  var series=[{mes:0, aportado:aportadoAcc, saldo:saldo}];
+  for(var m=1;m<=nMeses;m++){
+    saldo = saldo*(1+i) + aporteMensal;
+    aportadoAcc = aportadoAcc + aporteMensal;
+    series.push({mes:m, aportado:aportadoAcc, saldo:saldo});
+  }
+  return series;
+}
+function aporteNecessario(saldoInicial, metaValor, annualPct, nMeses){
+  var i = monthlyRate(annualPct);
+  if(nMeses<=0) return Math.max(0, metaValor-saldoInicial);
+  if(Math.abs(i)<1e-9){ return Math.max(0,(metaValor-saldoInicial)/nMeses); }
+  var fatorFV=Math.pow(1+i,nMeses);
+  var denom=(fatorFV-1)/i;
+  var ap=(metaValor - saldoInicial*fatorFV)/denom;
+  return Math.max(0, ap);
+}
+
+/* ---------- rendering ---------- */
+function el(html){ var t=document.createElement('template'); t.innerHTML=html.trim(); return t.content.firstChild; }
+var appEl;
+
+function render(){
+  if(pendingHoverCleanup){ pendingHoverCleanup(); pendingHoverCleanup=null; }
+  appEl = document.getElementById('app');
+
+  if(!isConfigured()){ appEl.innerHTML = renderSetupNotice(); return; }
+  if(!authReady){ appEl.innerHTML = renderLoading(); return; }
+  if(!currentUser){ appEl.innerHTML = renderLogin(); wireLogin(); return; }
+  if(!configLoaded){ appEl.innerHTML = renderLoading(); return; }
+  if(!config){ appEl.innerHTML = renderWizard(); wireWizard(); return; }
+
+  var prof = currentProfile();
+  if(!prof){ appEl.innerHTML = renderLinkAccount(); wireLinkAccount(); return; }
+
+  appEl.innerHTML = renderApp(prof);
+  wireApp(prof);
+}
+
+function renderLoading(){
+  return '<div class="center-screen"><p style="color:var(--fg-muted)">Carregando o cofre…</p></div>';
+}
+
+function renderSetupNotice(){
+  return '<div class="center-screen"><div class="auth-card card">'+
+    '<h1 style="margin-bottom:10px;">Falta configurar o Firebase</h1>'+
+    '<p class="sub">Este arquivo ainda está com as chaves de exemplo. Veja o passo a passo no README.md deste repositório para criar o projeto no Firebase e colar as chaves no início do bloco <code>&lt;script&gt;</code> deste <code>index.html</code>.</p>'+
+  '</div></div>';
+}
+
+/* ---- login (Firebase email/senha) ---- */
+function renderLogin(){
+  return '<div class="center-screen"><div class="auth-card card">'+
+    '<div style="text-align:center;margin-bottom:14px;"><span style="font-size:32px;">💍</span></div>'+
+    '<h1 style="margin-bottom:6px;text-align:center;">Nosso Cofre</h1>'+
+    '<p class="sub" style="text-align:center;">Entre com a conta que foi criada pra você.</p>'+
+    '<form id="loginForm" class="stack">'+
+      '<div class="field"><label for="lg_email">E-mail</label><input id="lg_email" type="email" required autocomplete="username"></div>'+
+      '<div class="field"><label for="lg_pass">Senha</label><input id="lg_pass" type="password" required autocomplete="current-password"></div>'+
+      '<button class="btn wide" type="submit">Entrar</button>'+
+      '<p id="loginMsg"></p>'+
+      '<p style="text-align:center;"><button type="button" class="linklike" id="forgotBtn">Esqueci minha senha</button></p>'+
+    '</form>'+
+  '</div></div>';
+}
+function wireLogin(){
+  document.getElementById('loginForm').addEventListener('submit', function(ev){
+    ev.preventDefault();
+    var email=document.getElementById('lg_email').value.trim();
+    var pass=document.getElementById('lg_pass').value;
+    var msg=document.getElementById('loginMsg');
+    msg.className=''; msg.textContent='';
+    firebase.auth().signInWithEmailAndPassword(email, pass).catch(function(err){
+      msg.className='err'; msg.textContent='E-mail ou senha inválidos.';
+    });
+  });
+  document.getElementById('forgotBtn').addEventListener('click', function(){
+    var email=document.getElementById('lg_email').value.trim();
+    var msg=document.getElementById('loginMsg');
+    if(!email){ msg.className='err'; msg.textContent='Digite seu e-mail acima primeiro.'; return; }
+    firebase.auth().sendPasswordResetEmail(email).then(function(){
+      msg.className='ok-msg'; msg.textContent='Enviamos um link de redefinição para '+email+'.';
+    }).catch(function(err){
+      msg.className='err'; msg.textContent='Não consegui enviar: '+err.message;
+    });
+  });
+}
+
+/* ---- wizard (first run, no config doc yet) ---- */
+function renderWizard(){
+  return '<div class="center-screen"><div class="auth-card card">'+
+    '<h1 style="margin-bottom:6px;">Vamos criar o cofre</h1>'+
+    '<p class="sub" style="margin-bottom:16px;">Você está entrando com <b>'+escapeHtml(currentUser.email)+'</b> — esse e-mail fica vinculado ao primeiro nome abaixo. Dá pra editar tudo depois.</p>'+
+    '<form id="setupForm" class="stack">'+
+      '<div class="row">'+
+        '<div class="field"><label for="su_nome1">Seu nome</label><input id="su_nome1" required placeholder="Ex: Ana"></div>'+
+        '<div class="field"><label for="su_nome2">Nome do seu par</label><input id="su_nome2" required placeholder="Ex: Davi"></div>'+
+      '</div>'+
+      '<div class="field"><label for="su_metanome">Meta (opcional)</label><input id="su_metanome" placeholder="Ex: Casamento + entrada do apê"></div>'+
+      '<div class="row">'+
+        '<div class="field"><label for="su_metavalor">Valor da meta (R$)</label><input id="su_metavalor" type="number" min="0" step="0.01" placeholder="150000"></div>'+
+        '<div class="field"><label for="su_metadata">Data da meta</label><input id="su_metadata" type="date"></div>'+
+      '</div>'+
+      '<button class="btn wide" type="submit">Criar o cofre</button>'+
+    '</form>'+
+  '</div></div>';
+}
+function wireWizard(){
+  document.getElementById('setupForm').addEventListener('submit', function(ev){
+    ev.preventDefault();
+    var cfg=defaultConfig();
+    cfg.nome1=document.getElementById('su_nome1').value.trim();
+    cfg.email1=currentUser.email;
+    cfg.nome2=document.getElementById('su_nome2').value.trim();
+    cfg.metaNome=document.getElementById('su_metanome').value.trim();
+    cfg.metaValor=parseFloat(document.getElementById('su_metavalor').value)||0;
+    cfg.metaData=document.getElementById('su_metadata').value||"";
+    createConfig(cfg);
+  });
+}
+
+/* ---- link account (logged in, but this email isn't mapped to nome1/nome2 yet) ---- */
+function renderLinkAccount(){
+  var taken1 = config.email1 ? ' <span class="taken">('+escapeHtml(config.email1)+')</span>' : '';
+  var taken2 = config.email2 ? ' <span class="taken">('+escapeHtml(config.email2)+')</span>' : '';
+  return '<div class="center-screen"><div class="auth-card card">'+
+    '<h1 style="margin-bottom:6px;">Quem é você?</h1>'+
+    '<p class="sub">Conectado como <b>'+escapeHtml(currentUser.email)+'</b>. Escolha a qual dos dois esse e-mail pertence.</p>'+
+    '<div class="profile-pick">'+
+      '<button type="button" class="profile-card" data-link="1"><span class="initial">'+escapeHtml(initial("1"))+'</span><b>'+escapeHtml(nome("1"))+'</b>'+taken1+'</button>'+
+      '<button type="button" class="profile-card p2" data-link="2"><span class="initial">'+escapeHtml(initial("2"))+'</span><b>'+escapeHtml(nome("2"))+'</b>'+taken2+'</button>'+
+    '</div>'+
+    '<p style="text-align:center;margin-top:14px;"><button type="button" class="linklike" id="linkLogout">sair</button></p>'+
+  '</div></div>';
+}
+function wireLinkAccount(){
+  document.querySelectorAll('[data-link]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var p=btn.getAttribute('data-link');
+      var already = p==="1"? config.email1: config.email2;
+      if(already && already.toLowerCase()!==currentUser.email.toLowerCase()){
+        if(!confirm(escapeHtml(nome(p))+' já está vinculado a '+already+'. Substituir por '+currentUser.email+'?')) return;
+      }
+      var partial={}; partial["email"+p]=currentUser.email;
+      saveConfig(partial);
+    });
+  });
+  document.getElementById('linkLogout').addEventListener('click', function(){ firebase.auth().signOut(); });
+}
+
+/* ---- main app ---- */
+function renderApp(prof){
+  var tabs=[["visao","Visão geral"],["aportes","Aportes"],["investimento","Investimento"],["simulacao","Simulação"]];
+  var tabsHtml = tabs.map(function(t){
+    return '<button class="tab" role="tab" aria-selected="'+(activeTab===t[0])+'" data-tab="'+t[0]+'">'+t[1]+'</button>';
+  }).join('');
+
+  var body="";
+  if(activeTab==="visao") body=renderVisao(prof);
+  else if(activeTab==="aportes") body=renderAportes(prof);
+  else if(activeTab==="investimento") body=renderInvestimento();
+  else if(activeTab==="simulacao") body=renderSimulacao();
+
+  var curTheme = document.documentElement.getAttribute('data-theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');
+
+  return '<div class="topbar">'+
+    '<div class="topbar-row">'+
+      '<div class="brand"><h1>Nosso Cofre</h1><span class="ring">💍</span></div>'+
+      '<div class="who">'+
+        'Olá, <b>'+escapeHtml(nome(prof))+'</b> · <button class="linklike" id="trocarVinculo">não é você?</button> · <button class="linklike" id="sairBtn">sair</button>'+
+        '<button class="iconbtn" id="themeBtn" title="Alternar tema" aria-label="Alternar tema">'+(curTheme==='dark'?'☀':'☾')+'</button>'+
+      '</div>'+
+    '</div>'+
+    '<div class="tabs" role="tablist">'+tabsHtml+'</div>'+
+  '</div>'+
+  body+
+  '<footer class="credit">Dados sincronizados em tempo real entre os dois logins.</footer>';
+}
+
+function wireApp(prof){
+  document.getElementById('sairBtn').addEventListener('click', function(){ firebase.auth().signOut(); });
+  document.getElementById('trocarVinculo').addEventListener('click', function(){ forceLinkScreen=true; render(); });
+  document.getElementById('themeBtn').addEventListener('click', function(){ toggleTheme(); render(); });
+  document.querySelectorAll('[data-tab]').forEach(function(btn){
+    btn.addEventListener('click', function(){ activeTab=btn.getAttribute('data-tab'); render(); });
+  });
+  if(activeTab==="visao") wireVisao(prof);
+  else if(activeTab==="aportes") wireAportes(prof);
+  else if(activeTab==="investimento") wireInvestimento();
+  else if(activeTab==="simulacao") wireSimulacao();
+}
+
+/* ---- Visão geral ---- */
+function renderVisao(prof){
+  var saldoTotal=saldoEstimado(null);
+  var aportadoTotal=totalAportado(null);
+  var rendimento=saldoTotal-aportadoTotal;
+  var s1=saldoEstimado("1"), s2=saldoEstimado("2");
+  var pct1 = saldoTotal>0? (s1/saldoTotal*100):0;
+  var pct2 = 100-pct1;
+
+  var metaHtml="";
+  if(config.metaValor>0){
+    var pct=clamp(saldoTotal/config.metaValor*100,0,999);
+    var faltam=Math.max(0,config.metaValor-saldoTotal);
+    var diasTxt="";
+    if(config.metaData){
+      var d=daysBetween(config.metaData)*-1;
+      diasTxt = d>0 ? ' · faltam '+fmtNum(d,0)+' dias ('+new Date(config.metaData+"T00:00:00").toLocaleDateString('pt-BR')+')' : ' · data da meta já passou';
+    }
+    metaHtml = '<div class="card">'+
+      '<h2>'+escapeHtml(config.metaNome||"Meta")+'</h2>'+
+      '<p class="sub">'+fmtBRL(saldoTotal)+' de '+fmtBRL(config.metaValor)+' ('+fmtNum(pct,1)+'%)'+diasTxt+'</p>'+
+      '<div class="progress-track"><div class="progress-fill" style="width:'+clamp(pct,0,100)+'%"></div></div>'+
+      (faltam>0?'<p class="helptext" style="margin-top:8px;">Faltam '+fmtBRL(faltam)+' para a meta.</p>':'<p class="helptext" style="margin-top:8px;color:var(--good)">Meta atingida! 🎉</p>')+
+    '</div>';
+  }
+
+  var salario1=config.salario1||0, salario2=config.salario2||0;
+
+  return metaHtml+
+  '<div class="card">'+
+    '<h2>Saldo guardado</h2>'+
+    '<p class="sub">Estimativa com rendimento, com base na taxa configurada em Investimento.</p>'+
+    '<div class="hero-num">'+fmtBRL(saldoTotal)+'</div>'+
+    '<div class="stat-grid">'+
+      '<div class="stat-tile"><div class="label">Total aportado</div><div class="value">'+fmtBRL(aportadoTotal)+'</div></div>'+
+      '<div class="stat-tile"><div class="label">Rendimento estimado</div><div class="value" style="color:var(--good)">+'+fmtBRL(rendimento)+'</div></div>'+
+      '<div class="stat-tile"><div class="label"><span class="badge p1">'+escapeHtml(nome("1"))+'</span></div><div class="value">'+fmtBRL(s1)+' <span style="font-size:11px;color:var(--fg-faint)">('+fmtNum(pct1,0)+'%)</span></div></div>'+
+      '<div class="stat-tile"><div class="label"><span class="badge p2">'+escapeHtml(nome("2"))+'</span></div><div class="value">'+fmtBRL(s2)+' <span style="font-size:11px;color:var(--fg-faint)">('+fmtNum(pct2,0)+'%)</span></div></div>'+
+    '</div>'+
+    '<div class="btn-row" style="margin-top:14px;"><button class="btn" id="goAportar">+ Registrar aporte</button></div>'+
+  '</div>'+
+
+  '<div class="card">'+
+    '<h2>Renda do casal e divisão proporcional</h2>'+
+    '<p class="sub">Informe o salário de cada um para dividir o aporte mensal de forma justa, proporcional à renda.</p>'+
+    '<div class="row">'+
+      '<div class="field"><label for="rf_sal1">Salário de '+escapeHtml(nome("1"))+' (R$)</label><input id="rf_sal1" type="number" min="0" step="0.01" value="'+salario1+'"></div>'+
+      '<div class="field"><label for="rf_sal2">Salário de '+escapeHtml(nome("2"))+' (R$)</label><input id="rf_sal2" type="number" min="0" step="0.01" value="'+salario2+'"></div>'+
+    '</div>'+
+    '<div class="field"><label for="rf_total">Aporte mensal combinado (R$)</label><input id="rf_total" type="number" min="0" step="0.01" placeholder="Ex: 1000"></div>'+
+    '<div id="divisaoResultado"></div>'+
+    '<div class="btn-row" style="margin-top:10px;"><button class="btn secondary" id="salvarRenda" type="button">Salvar salários</button></div>'+
+  '</div>';
+}
+function wireVisao(prof){
+  document.getElementById('goAportar').addEventListener('click', function(){ activeTab="aportes"; render(); setTimeout(function(){ var v=document.getElementById('ap_valor'); if(v) v.focus(); },0); });
+  var recalc=function(){
+    var sal1=parseFloat(document.getElementById('rf_sal1').value)||0;
+    var sal2=parseFloat(document.getElementById('rf_sal2').value)||0;
+    var total=parseFloat(document.getElementById('rf_total').value)||0;
+    var soma=sal1+sal2;
+    var share1 = soma>0? sal1/soma: 0.5;
+    var share2=1-share1;
+    var out=document.getElementById('divisaoResultado');
+    if(total>0){
+      out.innerHTML = '<div class="stat-grid" style="margin-top:4px;">'+
+        '<div class="stat-tile"><div class="label"><span class="badge p1">'+escapeHtml(nome("1"))+'</span> '+fmtNum(share1*100,0)+'%</div><div class="value">'+fmtBRL(total*share1)+'</div></div>'+
+        '<div class="stat-tile"><div class="label"><span class="badge p2">'+escapeHtml(nome("2"))+'</span> '+fmtNum(share2*100,0)+'%</div><div class="value">'+fmtBRL(total*share2)+'</div></div>'+
+      '</div>';
+    } else { out.innerHTML=""; }
+  };
+  ['rf_sal1','rf_sal2','rf_total'].forEach(function(id){ document.getElementById(id).addEventListener('input', recalc); });
+  recalc();
+  document.getElementById('salvarRenda').addEventListener('click', function(){
+    saveConfig({salario1: parseFloat(document.getElementById('rf_sal1').value)||0, salario2: parseFloat(document.getElementById('rf_sal2').value)||0});
+  });
+}
+
+/* ---- Aportes ---- */
+function renderAportes(prof){
+  var ordered = aportes.slice().sort(function(a,b){ return (b.data||"").localeCompare(a.data||""); });
+  var rows = ordered.map(function(a){
+    return '<tr><td>'+fmtDate(a.data)+'</td>'+
+      '<td><span class="badge '+(a.pessoa==="1"?"p1":"p2")+'">'+escapeHtml(nome(a.pessoa))+'</span></td>'+
+      '<td class="num">'+fmtBRL(a.valor)+'</td>'+
+      '<td>'+escapeHtml(a.nota||"")+'</td>'+
+      '<td class="num"><button class="btn danger" data-del="'+a.id+'">excluir</button></td></tr>';
+  }).join('');
+  if(!rows) rows='<tr><td colspan="5" style="color:var(--fg-muted);text-align:center;padding:18px 0;">Nenhum aporte ainda. Registre o primeiro abaixo.</td></tr>';
+
+  return '<div class="card">'+
+    '<h2>Novo aporte</h2>'+
+    '<form id="aporteForm" class="stack">'+
+      '<div class="row">'+
+        '<div class="field"><label for="ap_valor">Valor (R$)</label><input id="ap_valor" type="number" min="0.01" step="0.01" required placeholder="500,00"></div>'+
+        '<div class="field"><label for="ap_data">Data</label><input id="ap_data" type="date" value="'+todayISO()+'" required></div>'+
+      '</div>'+
+      '<div class="row">'+
+        '<div class="field"><label for="ap_pessoa">Quem aportou</label><select id="ap_pessoa">'+
+          '<option value="1" '+(prof==="1"?"selected":"")+'>'+escapeHtml(nome("1"))+'</option>'+
+          '<option value="2" '+(prof==="2"?"selected":"")+'>'+escapeHtml(nome("2"))+'</option>'+
+        '</select></div>'+
+        '<div class="field"><label for="ap_nota">Nota (opcional)</label><input id="ap_nota" placeholder="Ex: 13º salário"></div>'+
+      '</div>'+
+      '<div class="btn-row"><button class="btn" type="submit">Registrar aporte</button></div>'+
+    '</form>'+
+  '</div>'+
+  '<div class="card">'+
+    '<h2>Histórico</h2>'+
+    '<div class="table-wrap"><table><thead><tr><th>Data</th><th>Quem</th><th style="text-align:right;">Valor</th><th>Nota</th><th></th></tr></thead><tbody>'+rows+'</tbody></table></div>'+
+  '</div>';
+}
+function wireAportes(prof){
+  document.getElementById('aporteForm').addEventListener('submit', function(ev){
+    ev.preventDefault();
+    var valor=parseFloat(document.getElementById('ap_valor').value);
+    if(!valor||valor<=0) return;
+    addAporte({ valor:valor, data:document.getElementById('ap_data').value||todayISO(), pessoa:document.getElementById('ap_pessoa').value, nota:document.getElementById('ap_nota').value.trim() });
+  });
+  document.querySelectorAll('[data-del]').forEach(function(btn){
+    btn.addEventListener('click', function(){ if(confirm('Excluir este aporte?')) deleteAporte(btn.getAttribute('data-del')); });
+  });
+}
+
+/* ---- Investimento ---- */
+function renderInvestimento(){
+  var cdi=config.cdiAnual, pct=config.percentCdi;
+  var eff=effectiveAnnualPct();
+  var saldo=saldoEstimado(null);
+  return '<div class="card">'+
+    '<h2>Modalidade: Nubank, rendimento ligado ao CDI</h2>'+
+    '<p class="sub">Como funciona o investimento de referência deste cofre.</p>'+
+    '<div class="stack" style="font-size:13.5px;color:var(--fg-muted);line-height:1.5;">'+
+      '<p>No Nubank, o dinheiro das Caixinhas fica em RDB (Recibo de Depósito Bancário) e rende <b>100% do CDI</b> por padrão, sem taxa de administração. Quem é Nubank+ ou Ultravioleta pode ativar a <b>Caixinha Turbo</b>, que paga até <b>120% do CDI</b> sobre um limite de R$ 10.000, renovável a cada 31 dias.</p>'+
+      '<p>Há cobertura do FGC até R$ 250 mil por CPF em cada instituição. Incide Imposto de Renda regressivo sobre o rendimento: 22,5% até 180 dias, 20% de 181 a 360 dias, 17,5% de 361 a 720 dias e 15% acima de 720 dias — e IOF regressivo nos primeiros 30 dias.</p>'+
+      '<p style="font-size:12px;">A taxa do CDI muda com a Selic. Os valores abaixo são só uma estimativa configurável — confirme a taxa vigente no app do Nubank ou no Banco Central antes de decidir. Isto não é recomendação de investimento.</p>'+
+    '</div>'+
+  '</div>'+
+  '<div class="card">'+
+    '<h2>Parâmetros de rendimento</h2>'+
+    '<form id="invForm" class="stack">'+
+      '<div class="field"><label for="iv_cdi">CDI atual (% ao ano)</label><input id="iv_cdi" type="number" min="0" step="0.01" value="'+cdi+'"></div>'+
+      '<div class="field"><label>Percentual do CDI do seu investimento</label>'+
+        '<div class="pillgroup" id="pctPills">'+
+          [100,110,120].map(function(v){ return '<button type="button" class="pill" data-pct="'+v+'" aria-pressed="'+(pct===v)+'">'+v+'% CDI</button>'; }).join('')+
+        '</div>'+
+        '<input id="iv_pct" type="number" min="0" step="0.1" value="'+pct+'" style="margin-top:8px;max-width:160px;">'+
+      '</div>'+
+      '<div class="btn-row"><button class="btn secondary" type="submit">Salvar parâmetros</button></div>'+
+    '</form>'+
+    '<div class="stat-grid" style="margin-top:14px;">'+
+      '<div class="stat-tile"><div class="label">Taxa efetiva anual</div><div class="value">'+fmtNum(eff,2)+'%</div></div>'+
+      '<div class="stat-tile"><div class="label">Taxa efetiva mensal</div><div class="value">'+fmtNum(monthlyRate(eff)*100,2)+'%</div></div>'+
+      '<div class="stat-tile"><div class="label">Rendimento estimado em 12 meses</div><div class="value">+'+fmtBRL(saldo*(Math.pow(1+eff/100,1)-1))+'</div></div>'+
+    '</div>'+
+  '</div>';
+}
+function wireInvestimento(){
+  document.querySelectorAll('[data-pct]').forEach(function(btn){
+    btn.addEventListener('click', function(){ document.getElementById('iv_pct').value=btn.getAttribute('data-pct'); });
+  });
+  document.getElementById('invForm').addEventListener('submit', function(ev){
+    ev.preventDefault();
+    saveConfig({ cdiAnual: parseFloat(document.getElementById('iv_cdi').value)||0, percentCdi: parseFloat(document.getElementById('iv_pct').value)||0 });
+  });
+}
+
+/* ---- Simulação ---- */
+function renderSimulacao(){
+  var saldoAtual=saldoEstimado(null);
+  var effAnnual=effectiveAnnualPct();
+  var defaultMeses=24;
+  if(config.metaData){
+    var dias=daysBetween(config.metaData)*-1;
+    if(dias>0) defaultMeses=Math.max(1,Math.round(dias/30.4368));
+  }
+  return '<div class="card">'+
+    '<h2>Simulação de investimento</h2>'+
+    '<div class="pillgroup" style="margin-bottom:14px;">'+
+      '<button type="button" class="pill" data-mode="forward" aria-pressed="'+(simMode==="forward")+'">Projetar saldo futuro</button>'+
+      '<button type="button" class="pill" data-mode="reverse" aria-pressed="'+(simMode==="reverse")+'">Quanto preciso guardar por mês</button>'+
+    '</div>'+
+    '<form id="simForm" class="stack">'+
+      '<div class="row">'+
+        '<div class="field"><label for="sim_saldo">Saldo já guardado (R$)</label><input id="sim_saldo" type="number" min="0" step="0.01" value="'+saldoAtual.toFixed(2)+'"></div>'+
+        '<div class="field"><label for="sim_taxa">Taxa anual estimada (%)</label><input id="sim_taxa" type="number" min="0" step="0.01" value="'+effAnnual.toFixed(2)+'"></div>'+
+      '</div>'+
+      '<div class="row">'+
+        '<div class="field" id="sim_aporte_wrap"><label for="sim_aporte">Aporte mensal (R$)</label><input id="sim_aporte" type="number" min="0" step="0.01" value="1000"></div>'+
+        '<div class="field hidden" id="sim_meta_wrap"><label for="sim_meta">Valor da meta (R$)</label><input id="sim_meta" type="number" min="0" step="0.01" value="'+(config.metaValor||150000)+'"></div>'+
+        '<div class="field"><label for="sim_meses">Prazo (meses)</label><input id="sim_meses" type="number" min="1" step="1" value="'+defaultMeses+'"></div>'+
+      '</div>'+
+      '<div class="btn-row"><button class="btn" type="submit">Calcular</button></div>'+
+    '</form>'+
+  '</div>'+
+  '<div id="simResultado"></div>';
+}
+function wireSimulacao(){
+  function syncModeUI(){
+    document.querySelectorAll('[data-mode]').forEach(function(b){ b.setAttribute('aria-pressed', b.getAttribute('data-mode')===simMode); });
+    document.getElementById('sim_aporte_wrap').classList.toggle('hidden', simMode==="reverse");
+    document.getElementById('sim_meta_wrap').classList.toggle('hidden', simMode==="forward");
+  }
+  document.querySelectorAll('[data-mode]').forEach(function(btn){
+    btn.addEventListener('click', function(){ simMode=btn.getAttribute('data-mode'); syncModeUI(); });
+  });
+  syncModeUI();
+  document.getElementById('simForm').addEventListener('submit', function(ev){
+    ev.preventDefault();
+    runSimulacao();
+  });
+}
+function runSimulacao(){
+  var saldoInicial=parseFloat(document.getElementById('sim_saldo').value)||0;
+  var taxa=parseFloat(document.getElementById('sim_taxa').value)||0;
+  var meses=clamp(parseInt(document.getElementById('sim_meses').value,10)||1,1,600);
+  var aporteMensal, aporteCalculado=null;
+
+  if(simMode==="forward"){
+    aporteMensal=parseFloat(document.getElementById('sim_aporte').value)||0;
+  } else {
+    var metaValor=parseFloat(document.getElementById('sim_meta').value)||0;
+    aporteCalculado=aporteNecessario(saldoInicial, metaValor, taxa, meses);
+    aporteMensal=aporteCalculado;
+  }
+
+  var series=simulateForward(saldoInicial, aporteMensal, taxa, meses);
+  var last=series[series.length-1];
+  var rendimentoTotal=last.saldo-last.aportado;
+
+  var out=document.getElementById('simResultado');
+  var reverseNote = simMode==="reverse" ? '<div class="stat-tile" style="margin-bottom:12px;"><div class="label">Aporte mensal necessário</div><div class="value">'+fmtBRL(aporteCalculado)+'</div></div>' : "";
+
+  out.innerHTML = '<div class="card">'+
+    '<h2>Resultado em '+meses+' meses</h2>'+
+    reverseNote+
+    '<div class="stat-grid">'+
+      '<div class="stat-tile"><div class="label">Saldo final estimado</div><div class="value">'+fmtBRL(last.saldo)+'</div></div>'+
+      '<div class="stat-tile"><div class="label">Total aportado</div><div class="value">'+fmtBRL(last.aportado)+'</div></div>'+
+      '<div class="stat-tile"><div class="label">Rendimento no período</div><div class="value" style="color:var(--good)">+'+fmtBRL(rendimentoTotal)+'</div></div>'+
+    '</div>'+
+    '<div class="btn-row" style="margin-top:12px;"><button class="btn ghost" id="toggleTable" type="button">'+(showSimTable?"Ver gráfico":"Ver tabela")+'</button></div>'+
+    '<div id="simViz" style="margin-top:14px;"></div>'+
+  '</div>';
+
+  document.getElementById('toggleTable').addEventListener('click', function(){ showSimTable=!showSimTable; renderSimViz(series); });
+  renderSimViz(series);
+}
+function renderSimViz(series){
+  var host=document.getElementById('simViz');
+  document.getElementById('toggleTable').textContent = showSimTable?"Ver gráfico":"Ver tabela";
+  if(showSimTable){ host.innerHTML = simTableHtml(series); return; }
+  host.innerHTML = simChartHtml();
+  wireSimChart(series);
+}
+function simTableHtml(series){
+  var nMeses=series.length-1;
+  var stepYears = nMeses>12;
+  var rows=[];
+  if(stepYears){
+    var years=Math.ceil(nMeses/12);
+    for(var y=1;y<=years;y++){
+      var idx=Math.min(y*12, nMeses);
+      var pt=series[idx];
+      rows.push('<tr><td>Ano '+y+'</td><td class="num">'+fmtBRL(pt.aportado)+'</td><td class="num">'+fmtBRL(pt.saldo-pt.aportado)+'</td><td class="num">'+fmtBRL(pt.saldo)+'</td></tr>');
+    }
+  } else {
+    series.forEach(function(pt){
+      if(pt.mes===0) return;
+      rows.push('<tr><td>Mês '+pt.mes+'</td><td class="num">'+fmtBRL(pt.aportado)+'</td><td class="num">'+fmtBRL(pt.saldo-pt.aportado)+'</td><td class="num">'+fmtBRL(pt.saldo)+'</td></tr>');
+    });
+  }
+  return '<div class="table-wrap"><table><thead><tr><th>Período</th><th style="text-align:right">Aportado</th><th style="text-align:right">Rendimento</th><th style="text-align:right">Saldo</th></tr></thead><tbody>'+rows.join('')+'</tbody></table></div>';
+}
+function simChartHtml(){
+  return '<div class="legend"><span><i class="swatch" style="background:var(--accent)"></i>Aportado</span><span><i class="swatch" style="background:var(--accent-2)"></i>Rendimento</span></div>'+
+  '<div class="chart-wrap" id="chartWrap"><svg class="chart" id="chartSvg" viewBox="0 0 640 300" preserveAspectRatio="none"></svg></div>';
+}
+function wireSimChart(series){
+  var svg=document.getElementById('chartSvg');
+  var W=640,H=300, padL=52, padR=12, padT=16, padB=28;
+  var plotW=W-padL-padR, plotH=H-padT-padB;
+  var nMeses=series.length-1;
+  var maxSaldo=series[series.length-1].saldo || 1;
+  maxSaldo = maxSaldo<=0 ? 1 : maxSaldo*1.08;
+
+  function xFor(mes){ return padL + (nMeses===0?0:(mes/nMeses)*plotW); }
+  function yFor(val){ return padT + plotH - clamp(val/maxSaldo,0,1)*plotH; }
+
+  var axisColor="var(--border-strong)", gridColor="var(--border)", textColor="var(--fg-faint)";
+  var svgParts=[];
+  for(var g=0;g<=4;g++){
+    var val=maxSaldo*g/4;
+    var y=yFor(val);
+    svgParts.push('<line x1="'+padL+'" y1="'+y+'" x2="'+(W-padR)+'" y2="'+y+'" stroke="'+gridColor+'" stroke-width="1"/>');
+    svgParts.push('<text x="'+(padL-8)+'" y="'+(y+4)+'" text-anchor="end" font-size="10.5" fill="'+textColor+'" font-family="system-ui">'+fmtCompactBRL(val)+'</text>');
+  }
+  var aportadoPts=series.map(function(pt){ return xFor(pt.mes)+','+yFor(pt.aportado); });
+  var saldoPts=series.map(function(pt){ return xFor(pt.mes)+','+yFor(pt.saldo); });
+  var baseline=yFor(0);
+  var aportadoArea='M'+padL+','+baseline+' L'+aportadoPts.join(' L')+' L'+(W-padR)+','+baseline+' Z';
+  var saldoArea='M'+padL+','+baseline+' L'+saldoPts.join(' L')+' L'+(W-padR)+','+baseline+' Z';
+  svgParts.push('<path d="'+saldoArea+'" fill="var(--accent-2)" opacity="0.22"/>');
+  svgParts.push('<path d="'+aportadoArea+'" fill="var(--accent)" opacity="0.30"/>');
+  svgParts.push('<path d="M'+saldoPts.join(' L')+'" fill="none" stroke="var(--accent-2)" stroke-width="2"/>');
+  svgParts.push('<path d="M'+aportadoPts.join(' L')+'" fill="none" stroke="var(--accent)" stroke-width="2"/>');
+  svgParts.push('<line x1="'+padL+'" y1="'+(padT+plotH)+'" x2="'+(W-padR)+'" y2="'+(padT+plotH)+'" stroke="'+axisColor+'" stroke-width="1"/>');
+  var labelCount=Math.min(6,nMeses);
+  for(var l=0;l<=labelCount;l++){
+    var mes=Math.round(nMeses*l/labelCount);
+    var x=xFor(mes);
+    var lbl = nMeses>12 ? (Math.round(mes/12)+"a") : ("m"+mes);
+    svgParts.push('<text x="'+x+'" y="'+(H-8)+'" text-anchor="middle" font-size="10.5" fill="'+textColor+'" font-family="system-ui">'+lbl+'</text>');
+  }
+  svgParts.push('<line id="hoverLine" x1="0" y1="'+padT+'" x2="0" y2="'+(padT+plotH)+'" stroke="var(--fg-faint)" stroke-width="1" opacity="0"/>');
+  svg.innerHTML=svgParts.join('');
+
+  var wrap=document.getElementById('chartWrap');
+  var tip=el('<div class="tooltip" style="display:none;"></div>');
+  wrap.appendChild(tip);
+  var hoverLine=document.getElementById('hoverLine');
+
+  function onMove(ev){
+    var rect=svg.getBoundingClientRect();
+    var relX=(ev.clientX-rect.left)/rect.width*W;
+    var mes=clamp(Math.round((relX-padL)/plotW*nMeses),0,nMeses);
+    var pt=series[mes];
+    var x=xFor(mes);
+    hoverLine.setAttribute('x1',x); hoverLine.setAttribute('x2',x); hoverLine.setAttribute('opacity','1');
+    var leftPx=(x/W)*rect.width;
+    var topPx=(yFor(pt.saldo)/H)*rect.height;
+    tip.style.left=leftPx+'px'; tip.style.top=topPx+'px'; tip.style.display='block';
+    tip.innerHTML='<div style="font-weight:700;margin-bottom:4px;">Mês '+pt.mes+'</div>'+
+      '<div class="trow"><span>Aportado</span><span>'+fmtBRL(pt.aportado)+'</span></div>'+
+      '<div class="trow"><span>Rendimento</span><span>'+fmtBRL(pt.saldo-pt.aportado)+'</span></div>'+
+      '<div class="trow" style="font-weight:700;"><span>Saldo</span><span>'+fmtBRL(pt.saldo)+'</span></div>';
+  }
+  function onLeave(){ hoverLine.setAttribute('opacity','0'); tip.style.display='none'; }
+  svg.addEventListener('mousemove', onMove);
+  svg.addEventListener('mouseleave', onLeave);
+  svg.addEventListener('touchmove', function(ev){ if(ev.touches&&ev.touches[0]) onMove(ev.touches[0]); }, {passive:true});
+  pendingHoverCleanup=function(){ svg.removeEventListener('mousemove',onMove); svg.removeEventListener('mouseleave',onLeave); };
+}
+function fmtCompactBRL(n){
+  if(n>=1000000) return (n/1000000).toFixed(1).replace('.0','')+'M';
+  if(n>=1000) return (n/1000).toFixed(0)+'k';
+  return fmtNum(n,0);
+}
+
+/* ---------- boot ---------- */
+initFirebase();
+render();
+})();
+</script>
+</body>
+</html>
