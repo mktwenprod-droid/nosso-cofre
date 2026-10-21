@@ -6,7 +6,13 @@
 <meta name="theme-color" content="#16261c">
 <script>(function(){try{var t=localStorage.getItem('nossoCofre-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
 <title>DuoVita</title>
+<link rel="manifest" href="manifest.json">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%2316261c'/%3E%3Ctext x='50' y='64' font-size='48' text-anchor='middle' fill='%23f1ede1' font-family='Georgia,serif'%3E%E2%88%9E%3C/text%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="DuoVita">
+<meta name="mobile-web-app-capable" content="yes">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Caveat:wght@500;600&display=swap" rel="stylesheet">
@@ -895,6 +901,12 @@ function fmtCompactBRL(n){
 /* ---------- boot ---------- */
 initFirebase();
 render();
+
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", function(){
+    navigator.serviceWorker.register("sw.js").catch(function(){});
+  });
+}
 })();
 </script>
 </body>

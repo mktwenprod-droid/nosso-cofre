@@ -52,6 +52,13 @@ Cada um só precisa fazer esse vínculo uma vez; depois disso o site já reconhe
 
 O saldo com rendimento é uma **estimativa**, calculada localmente a partir da taxa configurada — não é extrato de banco. Confirme sempre a taxa vigente no app do Nubank ou no Banco Central.
 
+## Instalar como app no celular
+
+O site é um PWA (Progressive Web App): dá pra instalar na tela inicial do celular e abre em tela cheia, sem a barra do navegador, como um app de verdade.
+
+- **Android (Chrome)**: abra o site, toque no menu (⋮) e em **Adicionar à tela inicial** / **Instalar app**.
+- **iPhone (Safari)**: abra o site, toque no botão de compartilhar (□↑) e em **Adicionar à Tela de Início**.
+
 ## Publicar / acessar de qualquer lugar (GitHub Pages)
 
 Depois que o repositório for publicado no GitHub com Pages habilitado, o site fica disponível em:
